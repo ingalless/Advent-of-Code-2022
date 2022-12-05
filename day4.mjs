@@ -10,12 +10,12 @@ function fillNums(start, end) {
     }
     return string
 }
-function partOneButWithString() {
+function partOne() {
     let count = 0;
     for (const row of rows) {
         const [first, second] = row.split(',');
-        const firstNums = fillNums(...first.split('-'))
-        const secondNums = fillNums(...second.split('-'))
+        const firstNums = fillNums(...first.split('-').map(Number))
+        const secondNums = fillNums(...second.split('-').map(Number))
         if (firstNums.includes(secondNums) || secondNums.includes(firstNums)) {
             count++
         }
@@ -23,32 +23,35 @@ function partOneButWithString() {
 
     return count;
 }
-
-function partOne() {
+function partTwo() {
     let count = 0;
     for (const row of rows) {
-        const [pair1, pair2] = row.split(',');
-        const first = pair1.split('-').map(Number)
-        const second = pair2.split('-').map(Number)
-        if (first[0] > second[0]) {
-            if (first[1] < second[1]) {
-                count++
-            } else if (first[1] === second[1]) {
-                count++
+        const [firstPair, secondPair] = row.split(',');
+        const first = firstPair.split('-').map(Number)
+        const second = secondPair.split('-').map(Number)
+        const firstNums = fillNums(...first)
+        const secondNums = fillNums(...second)
+        let found = false;
+        for (let i = first[0]; i <= first[1]; i++) {
+            if (secondNums.includes(`<${i}>`)) {
+                found = true;
+                count++;
+                break;
             }
         }
-        else if (second[0] > first[0]) {
-            if (second[1] < first[1]) {
-                count++
-            } else if (first[1] === second[1]) {
-                count++
+        if (found) {
+            continue;
+        }
+        for (let i = second[0]; i <= second[1]; i++) {
+            if (firstNums.includes(`<${i}>`)) {
+                count++;
+                break;
             }
-        } else {
-            count++;
         }
     }
-    return count
+
+    return count;
 }
 
 console.log(partOne())
-console.log(partOneButWithString())
+console.log(partTwo())
